@@ -1,12 +1,17 @@
 package br.com.ricardo.carteiraclientes;
 
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.regex.Pattern;
 
 public class CadastroCliente extends AppCompatActivity {
 
@@ -29,6 +34,50 @@ public class CadastroCliente extends AppCompatActivity {
 
     }
 
+    public void validaCampos(){
+
+        boolean res = false;
+
+        String nome = editNome.getText().toString();
+        String endereco = editEndereco.getText().toString();
+        String telefone = editTelefone.getText().toString();
+        String email = editEmail.getText().toString();
+
+        if(isCampoVazio(nome)){
+            editNome.requestFocus();
+            res = true;
+        } else if (isCampoVazio(endereco)){
+            editEndereco.requestFocus();
+            res = true;
+        } else if (isCampoVazio(telefone)){
+            editTelefone.requestFocus();
+            res = true;
+        } else if (!isEmailValido(email)){
+            editEmail.requestFocus();
+            res = true;
+        }
+
+        if(res){
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle(R.string.alert_title);
+            alert.setMessage(R.string.alert_message);
+            alert.setNeutralButton(R.string.alert_button, null);
+            alert.show();
+        }
+    }
+
+    public boolean isCampoVazio(String valor){
+
+        boolean resultado = (TextUtils.isEmpty(valor) || valor.trim().isEmpty());
+        return resultado;
+    }
+
+    public boolean isEmailValido(String email){
+
+        boolean resultado = (!isCampoVazio(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
+        return resultado;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -45,7 +94,7 @@ public class CadastroCliente extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_ok) {
-            Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show();
+            validaCampos();
             return true;
         } else if(id == R.id.action_cancelar) {
             finish();

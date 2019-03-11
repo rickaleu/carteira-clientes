@@ -8,4 +8,7 @@
     <string name="label_endereco">Endereço</string>
     <string name="label_telefone">Telefone</string>
     <string name="label_email">Email</string>
+    <string name="alert_title">Aviso</string>
+    <string name="alert_message">Há campos inválidos ou em branco.</string>
+    <string name="alert_button">OK</string>
 </resources>
