@@ -11,4 +11,8 @@
     <string name="alert_title">Aviso</string>
     <string name="alert_message">Há campos inválidos ou em branco.</string>
     <string name="alert_button">OK</string>
+    <string name="conexao_sucesso">Conexão feita com sucesso</string>
+    <string name="conexao_ok">OK</string>
+    <string name="conexao_erro_titulo">Erro</string>
+    <string name="conexao_erro_botao">ok</string>
 </resources>
