@@ -9,9 +9,7 @@ import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import java.util.regex.Pattern;
 
 public class CadastroCliente extends AppCompatActivity {
 
@@ -61,7 +59,7 @@ public class CadastroCliente extends AppCompatActivity {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle(R.string.alert_title);
             alert.setMessage(R.string.alert_message);
-            alert.setNeutralButton(R.string.alert_button, null);
+            alert.setNeutralButton(R.string.action_ok, null);
             alert.show();
         }
     }

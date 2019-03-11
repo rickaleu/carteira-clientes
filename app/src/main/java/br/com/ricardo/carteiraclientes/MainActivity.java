@@ -3,9 +3,7 @@ package br.com.ricardo.carteiraclientes;
 import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,7 +15,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import database.DadosOpenHelper;
+import br.com.ricardo.carteiraclientes.database.DadosOpenHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,14 +55,14 @@ public class MainActivity extends AppCompatActivity {
             dadosOpenHelper = new DadosOpenHelper(this);
             conexao = dadosOpenHelper.getWritableDatabase();
             Snackbar.make(coordinatorLayout, R.string.conexao_sucesso, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.conexao_ok, null).show();
+                    .setAction(R.string.action_ok, null).show();
 
         }catch (SQLException ex){
 
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle(R.string.conexao_erro_titulo);
             alert.setMessage(ex.getMessage());
-            alert.setNeutralButton(R.string.conexao_erro_botao, null);
+            alert.setNeutralButton(R.string.action_ok, null);
             alert.show();
         }
 
