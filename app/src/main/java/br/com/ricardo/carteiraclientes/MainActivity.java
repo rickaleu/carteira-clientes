@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private RecyclerView listDados;
     private CoordinatorLayout coordinatorLayout;
+
     private SQLiteDatabase conexao;
     private DadosOpenHelper dadosOpenHelper;
 

@@ -1,6 +1,10 @@
 package br.com.ricardo.carteiraclientes;
 
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -9,6 +13,11 @@ import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import br.com.ricardo.carteiraclientes.database.DadosOpenHelper;
+import br.com.ricardo.carteiraclientes.dominio.entidades.Cliente;
+import br.com.ricardo.carteiraclientes.dominio.repositorio.ClienteRepositorio;
 
 
 public class CadastroCliente extends AppCompatActivity {
@@ -17,6 +26,14 @@ public class CadastroCliente extends AppCompatActivity {
     private EditText editEndereco;
     private EditText editTelefone;
     private EditText editEmail;
+    private ConstraintLayout constraintLayout;
+
+    private ClienteRepositorio clienteRepositorio;
+    private SQLiteDatabase conexao;
+    private DadosOpenHelper dadosOpenHelper;
+
+    private Cliente cliente;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,43 +42,87 @@ public class CadastroCliente extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        constraintLayout = (ConstraintLayout) findViewById(R.id.constraint_cliente);
         editNome = (EditText) findViewById(R.id.editNome);
         editEndereco = (EditText) findViewById(R.id.editEndereco);
         editTelefone = (EditText) findViewById(R.id.editTelefone);
         editEmail = (EditText) findViewById(R.id.editEmail);
 
+        criarConexao();
     }
 
-    public void validaCampos(){
+    public void criarConexao(){
 
-        boolean res = false;
+        try{
 
-        String nome = editNome.getText().toString();
-        String endereco = editEndereco.getText().toString();
-        String telefone = editTelefone.getText().toString();
-        String email = editEmail.getText().toString();
+            dadosOpenHelper = new DadosOpenHelper(this);
+            conexao = dadosOpenHelper.getWritableDatabase();
+            Snackbar.make(constraintLayout, R.string.conexao_sucesso, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.action_ok, null).show();
 
-        if(isCampoVazio(nome)){
-            editNome.requestFocus();
-            res = true;
-        } else if (isCampoVazio(endereco)){
-            editEndereco.requestFocus();
-            res = true;
-        } else if (isCampoVazio(telefone)){
-            editTelefone.requestFocus();
-            res = true;
-        } else if (!isEmailValido(email)){
-            editEmail.requestFocus();
-            res = true;
+            clienteRepositorio = new ClienteRepositorio(conexao);
+
+        }catch (SQLException ex){
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle(R.string.conexao_erro_titulo);
+            alert.setMessage(ex.getMessage());
+            alert.setNeutralButton(R.string.action_ok, null);
+            alert.show();
         }
 
-        if(res){
+    }
+
+    private void confirmar(){
+
+        try{
+            if(validaCampos()){
+                clienteRepositorio.inserir(cliente);
+                finish();
+            }
+
+        }catch (SQLException ex){
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle(R.string.conexao_erro_titulo);
+            alert.setMessage(ex.getMessage());
+            alert.setNeutralButton(R.string.action_ok, null);
+            alert.show();
+        }
+    }
+
+    public boolean validaCampos(){
+
+        boolean res = true;
+
+        cliente = new Cliente();
+        cliente.nome = editNome.getText().toString();
+        cliente.endereco = editEndereco.getText().toString();
+        cliente.telefone = editTelefone.getText().toString();
+        cliente.email = editEmail.getText().toString();
+
+        if(isCampoVazio(cliente.nome)){
+            editNome.requestFocus();
+            res = false;
+        } else if (isCampoVazio(cliente.endereco)){
+            editEndereco.requestFocus();
+            res = false;
+        } else if (isCampoVazio(cliente.telefone)){
+            editTelefone.requestFocus();
+            res = false;
+        } else if (!isEmailValido(cliente.email)){
+            editEmail.requestFocus();
+            res = false;
+        }
+
+        if(!res){
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle(R.string.alert_title);
             alert.setMessage(R.string.alert_message);
             alert.setNeutralButton(R.string.action_ok, null);
             alert.show();
         }
+
+        return res;
     }
 
     public boolean isCampoVazio(String valor){
@@ -92,7 +153,7 @@ public class CadastroCliente extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_ok) {
-            validaCampos();
+            confirmar();
             return true;
         } else if(id == R.id.action_cancelar) {
             finish();
