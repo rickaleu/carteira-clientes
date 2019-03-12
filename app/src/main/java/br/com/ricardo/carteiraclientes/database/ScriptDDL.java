@@ -4,15 +4,16 @@ public class ScriptDDL {
 
     public static String getCreateTableCliente(){
 
-        String sql = "CREATE TABLE IF NOT EXISTS CLIENTE (\n" +
-                "    CODIGO    INTEGER      PRIMARY KEY AUTOINCREMENT NOT NULL,\n" +
-                "    NOME      VARCHAR(250) NOT NULL DEFAULT (''),\n" +
-                "    ENDERECO  VARCHAR(250) NOT NULL DEFAULT (''),\n" +
-                "    TELEFONE  VARCHAR(200) NOT NULL DEFAULT (''),\n" +
-                "    EMAIL     VARCHAR(30)  NOT NULL DEFAULT('')\n" +
-                ");";
+        StringBuilder sql = new StringBuilder();
 
-        return sql;
+        sql.append("CREATE TABLE IF NOT EXISTS CLIENTE ( ");
+        sql.append("CODIGO    INTEGER      PRIMARY KEY AUTOINCREMENT NOT NULL,");
+        sql.append("NOME      VARCHAR(250) NOT NULL DEFAULT (''),");
+        sql.append("ENDERECO  VARCHAR(250) NOT NULL DEFAULT (''),");
+        sql.append("TELEFONE  VARCHAR(200) NOT NULL DEFAULT (''),");
+        sql.append("EMAIL     VARCHAR(30)  NOT NULL DEFAULT('') )");
+
+        return sql.toString();
 
     }
 }
