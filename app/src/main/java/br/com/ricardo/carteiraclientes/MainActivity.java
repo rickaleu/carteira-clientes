@@ -9,13 +9,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.List;
+
 import br.com.ricardo.carteiraclientes.database.DadosOpenHelper;
+import br.com.ricardo.carteiraclientes.dominio.entidades.Cliente;
+import br.com.ricardo.carteiraclientes.dominio.repositorio.ClienteRepositorio;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     private SQLiteDatabase conexao;
     private DadosOpenHelper dadosOpenHelper;
+    private ClienteRepositorio clienteRepositorio;
+    private ClienteAdapter clienteAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +40,23 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_main);
         fab = findViewById(R.id.fab);
         listDados = (RecyclerView) findViewById(R.id.listDados);
+
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_main);
+
+        criarConexao();
+
+        //montando o recyclerView
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        listDados.setLayoutManager(linearLayoutManager);
+
+        clienteRepositorio = new ClienteRepositorio(conexao);
+        List<Cliente> dados = clienteRepositorio.buscarTodos();
+        clienteAdapter = new ClienteAdapter(dados);
+        listDados.setAdapter(clienteAdapter);
+
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        criarConexao();
+
     }
 
     public void criarConexao(){

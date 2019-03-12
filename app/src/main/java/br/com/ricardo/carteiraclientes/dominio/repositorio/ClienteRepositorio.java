@@ -56,11 +56,11 @@ public class ClienteRepositorio {
 
     public List<Cliente> buscarTodos(){
 
-        List<Cliente> cliente = new ArrayList<Cliente>();
+        List<Cliente> clientes = new ArrayList<Cliente>();
 
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT CODIGO, NOME, ENDERECO, TELEFONE, EMAIL");
-        sql.append("FROM CLIENTE");
+        sql.append(" FROM CLIENTE ");
 
         Cursor resultado = conexao.rawQuery(sql.toString(), null);
 
@@ -75,12 +75,12 @@ public class ClienteRepositorio {
                 c.telefone = resultado.getString(resultado.getColumnIndexOrThrow("TELEFONE"));
                 c.email = resultado.getString(resultado.getColumnIndexOrThrow("EMAIL"));
 
-                cliente.add(c);
+                clientes.add(c);
 
             }while(resultado.moveToNext());
         }
 
-        return cliente;
+        return clientes;
     }
 
     public Cliente buscarCliente(int codigo){
