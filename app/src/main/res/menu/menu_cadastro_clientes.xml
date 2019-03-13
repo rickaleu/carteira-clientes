@@ -4,12 +4,12 @@
 
     <item
         android:id="@+id/action_ok"
-        android:title="OK"
+        android:title="@string/action_ok"
         android:visible="true"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_cancelar"
-        android:title="CANCELAR"
+        android:id="@+id/action_excluir"
+        android:title="@string/action_excluir"
         android:visible="true"
         app:showAsAction="always" />
 </menu>

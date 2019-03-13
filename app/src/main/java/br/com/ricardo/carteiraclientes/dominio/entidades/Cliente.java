@@ -10,4 +10,7 @@ public class Cliente implements Serializable {
     public String telefone;
     public String email;
 
+    public Cliente() {
+        codigo = 0;
+    }
 }

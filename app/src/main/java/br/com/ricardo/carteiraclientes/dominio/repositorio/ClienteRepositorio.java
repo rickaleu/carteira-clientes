@@ -35,7 +35,7 @@ public class ClienteRepositorio {
         String[] parametro = new String[1];
         parametro[0] = String.valueOf(codigo);
 
-        conexao.delete("CLIENTE", "CLIENTE = ?", parametro);
+        conexao.delete("CLIENTE", "CODIGO = ?", parametro);
 
     }
 
@@ -50,7 +50,7 @@ public class ClienteRepositorio {
         String[] parametro = new String[1];
         parametro[0] = String.valueOf(cliente.codigo);
 
-        conexao.update("CLIENTE", contentValues, "CLIENTE = ?", parametro);
+        conexao.update("CLIENTE", contentValues, "CODIGO = ?", parametro);
 
     }
 

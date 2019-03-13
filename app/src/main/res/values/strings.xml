@@ -13,4 +13,5 @@
     <string name="action_ok">OK</string>
     <string name="conexao_sucesso">Conexão feita com sucesso</string>
     <string name="conexao_erro_titulo">Erro</string>
+    <string name="action_excluir">EXCLUIR</string>
 </resources>

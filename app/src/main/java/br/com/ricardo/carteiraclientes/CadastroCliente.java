@@ -40,6 +40,7 @@ public class CadastroCliente extends AppCompatActivity {
         setContentView(R.layout.activity_cadastro_cliente);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         constraintLayout = (ConstraintLayout) findViewById(R.id.constraint_cliente);
         editNome = (EditText) findViewById(R.id.editNome);
@@ -55,9 +56,11 @@ public class CadastroCliente extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
 
+        cliente = new Cliente();
+
         if(bundle != null && bundle.containsKey("CLIENTE")){
 
-            Cliente cliente = (Cliente) bundle.getSerializable("CLIENTE");
+            cliente = (Cliente) bundle.getSerializable("CLIENTE");
             editNome.setText(cliente.nome);
             editEndereco.setText(cliente.endereco);
             editTelefone.setText(cliente.telefone);
@@ -89,46 +92,48 @@ public class CadastroCliente extends AppCompatActivity {
 
     private void confirmar(){
 
-        try{
-            if(validaCampos()){
-                clienteRepositorio.inserir(cliente);
+        if(validaCampos() == false){
+
+            try{
+                if(cliente.codigo == 0){
+                    clienteRepositorio.inserir(cliente);
+                } else{
+                    clienteRepositorio.alterar(cliente);
+                }
+
                 finish();
+
+            }catch (SQLException ex){
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle(R.string.conexao_erro_titulo);
+                alert.setMessage(ex.getMessage());
+                alert.setNeutralButton(R.string.action_ok, null);
+                alert.show();
             }
 
-        }catch (SQLException ex){
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle(R.string.conexao_erro_titulo);
-            alert.setMessage(ex.getMessage());
-            alert.setNeutralButton(R.string.action_ok, null);
-            alert.show();
         }
     }
 
     public boolean validaCampos(){
 
-        boolean res = true;
+        boolean res = false;
 
-        cliente = new Cliente();
         cliente.nome = editNome.getText().toString();
         cliente.endereco = editEndereco.getText().toString();
         cliente.telefone = editTelefone.getText().toString();
         cliente.email = editEmail.getText().toString();
 
-        if(isCampoVazio(cliente.nome)){
+        if(res = isCampoVazio(cliente.nome)){
             editNome.requestFocus();
-            res = false;
-        } else if (isCampoVazio(cliente.endereco)){
+        } else if (res = isCampoVazio(cliente.endereco)){
             editEndereco.requestFocus();
-            res = false;
-        } else if (isCampoVazio(cliente.telefone)){
+        } else if (res = isCampoVazio(cliente.telefone)){
             editTelefone.requestFocus();
-            res = false;
-        } else if (!isEmailValido(cliente.email)){
+        } else if (res = !isEmailValido(cliente.email)){
             editEmail.requestFocus();
-            res = false;
         }
 
-        if(!res){
+        if(res){
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle(R.string.alert_title);
             alert.setMessage(R.string.alert_message);
@@ -166,10 +171,14 @@ public class CadastroCliente extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_ok) {
+        if(id == android.R.id.home) {
+            finish();
+            return true;
+        } else if (id == R.id.action_ok) {
             confirmar();
             return true;
-        } else if(id == R.id.action_cancelar) {
+        } else if(id == R.id.action_excluir) {
+            clienteRepositorio.excluir(cliente.codigo);
             finish();
             return true;
         }
