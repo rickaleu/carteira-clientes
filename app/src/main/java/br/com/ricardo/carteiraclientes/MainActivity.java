@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -62,12 +64,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CadastroCliente.class);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
 
             }
         });
 
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        List<Cliente> dados = clienteRepositorio.buscarTodos();
+        clienteAdapter = new ClienteAdapter(dados);
+        listDados.setAdapter(clienteAdapter);
     }
 
     public void criarConexao(){

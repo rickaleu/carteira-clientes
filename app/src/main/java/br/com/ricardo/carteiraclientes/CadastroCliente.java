@@ -13,7 +13,6 @@ import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import br.com.ricardo.carteiraclientes.database.DadosOpenHelper;
 import br.com.ricardo.carteiraclientes.dominio.entidades.Cliente;
@@ -49,6 +48,21 @@ public class CadastroCliente extends AppCompatActivity {
         editEmail = (EditText) findViewById(R.id.editEmail);
 
         criarConexao();
+        verificaParametro();
+    }
+
+    private void verificaParametro(){
+
+        Bundle bundle = getIntent().getExtras();
+
+        if(bundle != null && bundle.containsKey("CLIENTE")){
+
+            Cliente cliente = (Cliente) bundle.getSerializable("CLIENTE");
+            editNome.setText(cliente.nome);
+            editEndereco.setText(cliente.endereco);
+            editTelefone.setText(cliente.telefone);
+            editEmail.setText(cliente.email);
+        }
     }
 
     public void criarConexao(){
